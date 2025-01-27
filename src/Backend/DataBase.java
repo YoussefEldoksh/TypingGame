@@ -5,6 +5,8 @@
 package Backend;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -14,6 +16,34 @@ public class DataBase {
     
     
     
-    ArrayList<String> passages = new ArrayList<>();
+    private Map<String, String> passages;
+    private static DataBase instance = null;
+  
+    
+    private DataBase() {
+        loadPassages();
+        
+    }
+    
+    
+    public static DataBase getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new DataBase();
+        }
+        
+        return instance;
+    }
+    
+    public void loadPassages()
+    {
+        passages = FileManagement.loadFromPassageJsonFile();
+    }
+
+    public Map<String, String> getPassages() {
+        return passages;
+    }
+    
     
 }

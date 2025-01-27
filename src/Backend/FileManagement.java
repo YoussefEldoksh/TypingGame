@@ -18,10 +18,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 
 /**
  *
@@ -30,29 +31,28 @@ import java.nio.file.StandardOpenOption;
 public class FileManagement {   
     
     
-      public static ArrayList<String> loadFromFriendRequestsJsonFileForSpecificUser(String userId) {
+      public static HashMap<String,String> loadFromPassageJsonFile () {
 
-        ArrayList<String> passages = new ArrayList<>();
+        HashMap<String,String> passages = new HashMap<>();
         try {
 
-            if (!Files.exists(Paths.get("passages.json")) || Files.size(Paths.get("friendrequests.json")) == 0) {
+            if (!Files.exists(Paths.get("passages.json")) || Files.size(Paths.get("passages.json")) == 0) {
                 Files.createFile(Paths.get("passages.json")); // create the file if not found
                 return passages;
             }
-            String json = new String(Files.readAllBytes(Paths.get("friendrequests.json")));
-            JSONArray friendRequestsJson = new JSONArray(json);
+            
+            String json = new String(Files.readAllBytes(Paths.get("passages.json")));
+            JSONArray passagesJson = new JSONArray(json);
 
-            for (int i = 0; i < friendRequestsJson.length(); i++) {
+            for (int i = 0; i < passagesJson.length(); i++) {
 
-                JSONObject userJson = friendRequestsJson.getJSONObject(i);
-                String email = userJson.getString("email");
-                String id = userJson.getString("senderid");
-                String username = userJson.getString("username");
-                String receiverId = userJson.getString("receiver");
-
+                JSONObject userJson = passagesJson.getJSONObject(i);
+                System.out.println(userJson);
+                String passage = userJson.getString("passage");
+                passages.put("passage"+(i+1), passage);
             }
         } catch (IOException ex) {
-            System.err.println("Error loading friend requests from JSON file: " + ex.getMessage());
+            System.err.println("Error loading passages from JSON file: " + ex.getMessage());
         }
 
         System.out.println("Exiting loadFromUsersJSONfile");

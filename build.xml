@@ -5,15 +5,11 @@
     <!-- Import NetBeans build system -->
     <import file="nbproject/build-impl.xml"/>
 
- <path id="libs">
-    <!-- Add Jackson JAR -->
+<path id="project.classpath">
     <fileset dir="lib">
-        <include name="jackson-databind-2.18.2.jar"/>
-    </fileset>
-    <!-- Add JSON JAR (org.json) -->
-    <fileset dir="lib">
-        <include name="json-20210307.jar"/> <!-- Update with your actual version -->
+        <include name="*.jar"/>
     </fileset>
 </path>
+
 
 </project>
