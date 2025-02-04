@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -31,9 +32,10 @@ import java.util.HashMap;
 public class FileManagement {   
     
     
-      public static HashMap<String,String> loadFromPassageJsonFile () {
+      public static ArrayList<Passages> loadFromPassageJsonFile () {
 
-        HashMap<String,String> passages = new HashMap<>();
+        ArrayList<Passages> passages = new ArrayList<>();
+        
         try {
 
             if (!Files.exists(Paths.get("passages.json")) || Files.size(Paths.get("passages.json")) == 0) {
@@ -49,7 +51,12 @@ public class FileManagement {
                 JSONObject userJson = passagesJson.getJSONObject(i);
                 System.out.println(userJson);
                 String passage = userJson.getString("passage");
-                passages.put("passage"+(i+1), passage);
+                String level = userJson.getString("level");
+              
+                
+               Passages p = new Passages(passage, level);
+               
+               passages.add(p);
             }
         } catch (IOException ex) {
             System.err.println("Error loading passages from JSON file: " + ex.getMessage());

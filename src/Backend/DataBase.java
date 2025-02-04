@@ -6,6 +6,7 @@ package Backend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +17,10 @@ public class DataBase {
     
     
     
-    private Map<String, String> passages;
+    private ArrayList<Passages> passages = new ArrayList<>();
+    private ArrayList<Passages> passages1 = new ArrayList<>();
+    private ArrayList<Passages> passages2 = new ArrayList<>();
+    private ArrayList<Passages> passages3 = new ArrayList<>();
     private static DataBase instance = null;
   
     
@@ -39,11 +43,37 @@ public class DataBase {
     public void loadPassages()
     {
         passages = FileManagement.loadFromPassageJsonFile();
+        
+        
+        for (Passages passage : passages) {
+            if(passage.getLevel().equals("1"))
+            {
+                passages1.add(passage);
+            }
+            if(passage.getLevel().equals("2"))
+            {
+                passages2.add(passage);
+            }
+            if(passage.getLevel().equals("3"))
+            {
+                passages3.add(passage);
+                        
+            }
+            
+        }
     }
 
-    public Map<String, String> getPassages() {
-        return passages;
+    public ArrayList<Passages> getPassages1() {
+        return passages1;
     }
-    
-    
+
+    public ArrayList<Passages> getPassages2() {
+        return passages2;
+    }
+
+    public ArrayList<Passages> getPassages3() {
+        return passages3;
+    }
+
+  
 }

@@ -5,6 +5,7 @@
 package Frontend;
 
 import Backend.DataBase;
+import Backend.Passages;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -29,8 +30,11 @@ public class MainPage extends javax.swing.JFrame {
      * Creates new form MainPabge
      */
     int typed = 0;
+    Passages p;
+    int level;
     String Passage;
-    char[] typedPassage;
+    ArrayList<Character> typedPassage = new ArrayList<>();
+    ArrayList<Character> correctlyTypedPassage = new ArrayList<>();
 
     public MainPage() {
         initComponents();
@@ -55,6 +59,9 @@ public class MainPage extends javax.swing.JFrame {
         ProgressBar = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultArea = new javax.swing.JTextPane();
+        easyButton = new javax.swing.JButton();
+        mediumButton = new javax.swing.JButton();
+        hardButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +92,27 @@ public class MainPage extends javax.swing.JFrame {
         ResultArea.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jScrollPane1.setViewportView(ResultArea);
 
+        easyButton.setText("Easy");
+        easyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                easyButtonActionPerformed(evt);
+            }
+        });
+
+        mediumButton.setText("Medium");
+        mediumButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mediumButtonActionPerformed(evt);
+            }
+        });
+
+        hardButton.setText("Hard");
+        hardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hardButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -94,10 +122,18 @@ public class MainPage extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 842, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(mediumButton)
+                                    .addComponent(easyButton)
+                                    .addComponent(hardButton)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(346, 346, 346)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -106,15 +142,19 @@ public class MainPage extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
+                        .addComponent(easyButton)
+                        .addGap(12, 12, 12)
+                        .addComponent(mediumButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(hardButton)
+                        .addGap(29, 29, 29)
                         .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
@@ -143,18 +183,28 @@ public class MainPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         typed = 0;
 
-        ArrayList<String> values = new ArrayList<>(DataBase.getInstance().getPassages().values());
+        ArrayList<Passages> values = new ArrayList<>();
 
+        if (level == 1) {
+            values = DataBase.getInstance().getPassages1();
+        }
+
+        if (level == 2) {
+            values = DataBase.getInstance().getPassages2();
+
+        }
+        if (level == 3) {
+            values = DataBase.getInstance().getPassages3();
+        }
         Random randompassage = new Random();
 
         int maxLineLength = 100;
         int randomIndex = randompassage.nextInt(values.size());
 
-        this.Passage = values.get(randomIndex);
+        this.p = values.get(randomIndex);
+        this.Passage = p.getPassage();
 
-        this.typedPassage = new char[Passage.toCharArray().length];
-
-        String[] passage = values.get(randomIndex).split(" ");
+        String[] passage = Passage.split(" ");
         StringBuilder formattedPassage = new StringBuilder();
         StringBuilder line = new StringBuilder();
         for (String word : passage) {
@@ -208,8 +258,10 @@ public class MainPage extends javax.swing.JFrame {
             protected void done() {
                 try {
                     get();
-                    Double result = (typed / 5) * (60 / 30)*1.0;
-                    ResultArea.setText("Words Per Minute: "+result.toString());  // Convert result to a string
+                    Double result = (typed / 5) * (60 / 30) * 1.0;
+                    Double accPercentage = (1.0 * correctlyTypedPassage.size() / typed) * 100;
+                    String accPercentageFormatted = String.format("%.2f", accPercentage);
+                    ResultArea.setText("Words Per Minute: " + result.toString() + "\n" + "Typing Accuracy: " + accPercentageFormatted);
                     TextArea.disable();
                     System.out.println("Task completed");
 
@@ -233,6 +285,12 @@ public class MainPage extends javax.swing.JFrame {
                 try {
                     int position = typed - 1;
                     if (position >= 0) {
+                        typedPassage.removeLast();
+                        if (typedPassage.getLast().equals(correctlyTypedPassage.getLast())) {
+                            correctlyTypedPassage.removeLast();
+                        }
+                        System.out.println(typedPassage);
+                        System.out.println(correctlyTypedPassage);
                         typed--;
 
                         SimpleAttributeSet blackColor = new SimpleAttributeSet();
@@ -254,6 +312,10 @@ public class MainPage extends javax.swing.JFrame {
                     try {
                         doc.remove(typed, 1);
                         doc.insertString(typed, String.valueOf(pass[typed]), greenColor);
+                        typedPassage.add(evt.getKeyChar());
+                        correctlyTypedPassage.add(evt.getKeyChar());
+                        System.out.println(typedPassage);
+                        System.out.println(correctlyTypedPassage);
                         typed++;
                     } catch (BadLocationException e) {
                         e.printStackTrace();
@@ -268,7 +330,10 @@ public class MainPage extends javax.swing.JFrame {
                     try {
                         doc.remove(typed, 1);
                         doc.insertString(typed, String.valueOf(pass[typed]), redColor);
+                        typedPassage.add(evt.getKeyChar());
                         typed++;
+                        System.out.println(typedPassage);
+                        System.out.println(correctlyTypedPassage);
                     } catch (BadLocationException e) {
 
                         e.printStackTrace();
@@ -282,8 +347,24 @@ public class MainPage extends javax.swing.JFrame {
 
     private void ProgressBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ProgressBarStateChanged
         // TODO add your handling code here:
-
+        level = 1;
     }//GEN-LAST:event_ProgressBarStateChanged
+
+    private void hardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hardButtonActionPerformed
+        // TODO add your handling code here:
+        level = 3;
+    }//GEN-LAST:event_hardButtonActionPerformed
+
+    private void easyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_easyButtonActionPerformed
+        // TODO add your handling code here:
+        level = 1;
+    }//GEN-LAST:event_easyButtonActionPerformed
+
+    private void mediumButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumButtonActionPerformed
+        // TODO add your handling code here:
+        level = 2;
+
+    }//GEN-LAST:event_mediumButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -325,9 +406,12 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JTextPane ResultArea;
     private javax.swing.JTextPane TextArea;
+    private javax.swing.JButton easyButton;
+    private javax.swing.JButton hardButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton mediumButton;
     // End of variables declaration//GEN-END:variables
 }
