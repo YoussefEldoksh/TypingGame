@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TypeFaster">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/TypeFaster.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
